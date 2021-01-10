@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         vaderetroll
 // @namespace    https://github.com/qsd222/vaderetroll
-// @version      0.1
+// @version      0.2
 // @description  Gestion de liste noire pour bloquer les trolls dans les commentaires du site V.A
 // @author       me and some copy-pasted anonymous contributors
 // @downloadURL https://github.com/qsd222/vaderetroll/raw/main/script/vaderetroll.user.js
@@ -138,17 +138,17 @@
     }
 
     function doModeration() {
-        document.querySelectorAll('article[role="article"]').forEach(function(article) {
+        document.querySelectorAll('article[role="article"][data-comment-user-id]').forEach(function(article) {
             let userSpan = article.querySelectorAll('span[about]').item(0);
             let userID = userSpan && userSpan.attributes.about.value.match(/\/user\/(\d*)/)[1];
             if (userID){
                 let user = {'pseudo':userSpan.textContent, 'ID':userID};
                 if (bannedDB.isBanned(user)){
                     userSpan.classList.add("bannedName");
-                    article.querySelectorAll('.comment__content').item(0).classList.add("banned");
+                    article.querySelectorAll('.comment__content .field--name-comment-body').item(0).classList.add("banned");
                 }else{
                     userSpan.classList.remove("bannedName");
-                    article.querySelectorAll('.comment__content').item(0).classList.remove("banned");
+                    article.querySelectorAll('.comment__content .field--name-comment-body').item(0).classList.remove("banned");
                 }
                 addContextMenu(userSpan, user);
             }
